@@ -2,6 +2,52 @@
 
 [문제 링크](https://www.acmicpc.net/problem/4949) 
 
+def judgeBalance(lst,a,b):
+    ans = "yes"
+    for i in range(a,b-1):
+        if(lst[i] == '('):
+            ans = "no"
+            for j in range(b,i+1,-1):
+                if(lst[j] == ')'):
+                    ans = "yes"
+                    if(i+1 != j):
+                        judgeBalance(lst,i+1,j-1)
+        elif(lst[i] == '['):
+             ans = "no"
+             for j in range(b,i+1,-1):
+                 if(lst[j] == ']'):
+                     ans = "yes"
+                     if(i+1 != j):
+                         judgeBalance(lst,i+1,j-1)                   
+    return ans    
+
+원래는 재귀를 통해 구현했으나 시간의 초과 발생
+
+def judgeBalance(lst, a, b):
+    stack = []
+    ans = "yes"
+    
+    for i in range(a, b):
+        if lst[i] == '(' or lst[i] == '[':
+            stack.append(lst[i])
+        elif lst[i] == ')':
+            if len(stack) == 0 or stack[-1] != '(':
+                ans = "no"
+                break
+            stack.pop()
+        elif lst[i] == ']':
+            if len(stack) == 0 or stack[-1] != '[':
+                ans = "no"
+                break
+            stack.pop()
+    
+    if len(stack) != 0:
+        ans = "no"
+    
+    return ans
+
+스택으로 다시 구현
+
 ### 성능 요약
 
 메모리: 31120 KB, 시간: 220 ms
