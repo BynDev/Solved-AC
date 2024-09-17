@@ -2,6 +2,7 @@
 
 [문제 링크](https://www.acmicpc.net/problem/4949) 
 
+
 def judgeBalance(lst,a,b):
     ans = "yes"
     for i in range(a,b-1):
