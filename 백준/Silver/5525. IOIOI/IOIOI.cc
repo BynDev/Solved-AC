@@ -1,53 +1,29 @@
-#include<iostream>
-#include<string>
-#include<vector>
-#include<cmath>
-
+#include <iostream>
+#include <string>
 using namespace std;
-int main()
-{
-    int N; cin >> N;
-    int M; cin >> M;
 
-    string S; cin >> S;
-    
-    int ans{0};
-    bool is_I = false;
-    bool is_O = false;
+int main() {
+    int N, M;
+    cin >> N >> M;
+    string S;
+    cin >> S;
 
-    for(int i = 0; i <= M - ((2 * N) + 1); i++)
-    {
-        if(S[i] == 'I')
-        {
-            is_I = true;
-            int tmp{1};
-            for(int j = i + 1 ; j < i + ((2 * N) + 1); j++)
-            {
-                if(S[j] == 'I' && is_O == true)
-                {
-                    is_I = true;
-                    is_O = false;
-                    tmp++;
-                }
-                else if(S[j] == 'O' && is_I == true)
-                {
-                    is_O = true;
-                    is_I = false;
-                    tmp++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            if(tmp == (2*N)+1)
-            {
+    int ans = 0;     
+    int count = 0;    
+
+    for (int i = 1; i < M - 1; i++) {
+        if (S[i - 1] == 'I' && S[i] == 'O' && S[i + 1] == 'I') {
+            count++;   
+            if (count == N) {  
                 ans++;
+                count--;   
             }
-            is_O = false;
-            is_I = false;
+            i++;
+        } else {
+            count = 0;
         }
     }
+
     cout << ans;
     return 0;
 }
