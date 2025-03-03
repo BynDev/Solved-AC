@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+#include <string>
+using namespace std;
+
+struct Node
+{
+    int weight;
+    int end;
+    bool operator<(const Node& _Left) const
+    {
+        return weight > _Left.weight;
+    }
+};
+
+vector<Node> v[1001];
+
+int Dijkstra(int N, int start, int end)
+{
+    priority_queue<Node>q;
+    vector<int> dist(N+1,INT_MAX);
+    q.push({0, start});
+    dist[start] = 0;
+
+    while (!q.empty())
+    {
+        Node node = q.top(); q.pop();
+        if (dist[node.end] < node.weight)
+        {
+            continue;
+        }
+        for (auto& j : v[node.end])
+        {
+            if (dist[j.end] > node.weight + j.weight)
+            {
+                dist[j.end] = node.weight + j.weight;
+                q.push({dist[j.end], j.end});
+            }
+        }
+    }
+    return dist[end];
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N,M,X; cin >> N >> M >> X;
+    for(int i=0;i<M;i++)
+    {
+        int s,e,T; cin >> s >> e >> T;
+        v[s].push_back({T,e});
+    }
+
+    int max {0};
+    for (int i=1;i<=N;i++)
+    {
+        int distance = Dijkstra(N,i,X) + Dijkstra(N,X,i);
+        if (distance > max)
+        {
+            max = distance;
+        }
+    }
+    cout << max << endl;
+    
+}
