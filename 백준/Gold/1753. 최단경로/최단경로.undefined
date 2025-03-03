@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+#include <string>
+using namespace std;
+
+struct Node
+{
+    int weight;
+    int end;
+    bool operator<(const Node &other) const {
+        return weight > other.weight;
+    }
+};
+ 
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int V,E; cin>>V>>E;
+    int K; cin>>K;
+
+    vector<Node> graph[20001];
+
+    for (int i = 0; i < E; i++)
+    {
+        int u,v,w; cin>>u>>v>>w;
+        graph[u].push_back({w,v});
+    }
+
+    vector<int> dist(V+1, INT_MAX);
+    dist[K] = 0;
+
+    priority_queue<Node> q;
+    q.push({0,K});
+    while (!q.empty())
+    {
+        Node node = q.top();
+        q.pop();
+        int u = node.end;
+
+        if (node.weight > dist[u])
+        {
+            continue;
+        }
+        for (auto &k : graph[u])
+        {
+            if (k.weight + node.weight < dist[k.end])
+            {
+                dist[k.end] = k.weight + node.weight;
+                q.push({dist[k.end], k.end});
+            }
+        }
+    }
+
+    for (int i = 1; i <= V;i++)
+    {
+        if (i == K)
+        {
+            cout << 0 << endl;
+        }
+        else if (dist[i] == INT_MAX)
+        {
+            cout << "INF" << endl;
+        }
+        else
+        {
+            cout << dist[i] << endl;
+        }
+    }
+}
