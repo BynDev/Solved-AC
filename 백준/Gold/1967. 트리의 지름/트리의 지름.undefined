@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+struct Node
+{
+    int end;
+    int distance;
+};
+
+vector<Node>Graph[10001];
+
+pair<int,int> dfs(int start, int dist)
+{
+    stack<Node>s;
+    vector<bool> visited(10001, false);
+    visited[start] = true;
+    s.push({start,dist});
+    int max {0};
+    int no {0};
+
+    while (!s.empty())
+    {
+        Node now = s.top();
+        s.pop();
+
+        if (max < now.distance)
+        {
+            max = now.distance;
+            no = now.end;
+        }
+
+        for (auto & j : Graph[now.end])
+        {
+            if (visited[j.end] == false)
+            {
+                visited[j.end] = true;
+                s.push({j.end, now.distance + j.distance});
+            }
+        }
+    }
+    return {max,no};
+}
+
+
+
+int main() {
+    int n; cin >> n;
+    for (int i = 0; i < n-1; i++)
+    {
+        int s,e,w; cin >> s >> e >> w;
+        Graph[s].push_back({e,w});
+        Graph[e].push_back({s,w});
+    }
+    cout << dfs(dfs(1,0).second,0).first;
+}
