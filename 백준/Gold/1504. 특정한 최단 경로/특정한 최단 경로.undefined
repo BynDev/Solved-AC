@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+#include <string>
+using namespace std;
+
+struct Node
+{
+    int weight;
+    int end;
+    bool operator <(Node other) const
+    {
+        return weight > other.weight;
+    }
+
+};
+
+vector<Node> graph[801];
+
+int Dijkstra(int N, int start,int end)
+{
+    vector<int> dist(N+1,INT_MAX);
+    dist[start] = 0;
+    priority_queue<Node> q;
+    q.push({0,start});
+    while(!q.empty())
+    {
+        Node cur = q.top(); q.pop();
+        if (dist[cur.end] < cur.weight)
+        {
+            continue;
+        }
+        for (auto& j : graph[cur.end])
+        {
+            if (dist[j.end] > cur.weight + j.weight)
+            {
+                dist[j.end] = cur.weight + j.weight;
+                q.push({dist[j.end],j.end});
+            }
+        }
+    }
+    return dist[end];
+}
+ 
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N,E; cin>>N>>E;
+
+    for (int i = 0; i < E; i++)
+    {
+        int a,b,c; cin >> a >> b >> c;
+        graph[a].push_back({c,b});
+        graph[b].push_back({c,a});
+    }
+    int v1,v2; cin>>v1>>v2;
+
+    int sv1 = Dijkstra(N,1,v1);
+    int v1v2 = Dijkstra(N,v1,v2);
+    int v2N = Dijkstra(N,v2,N);
+
+    int sv2 = Dijkstra(N,1,v2);
+    int v2v1 = Dijkstra(N,v2,v1);
+    int v1N = Dijkstra(N,v1,N);
+
+    int first = INT_MAX;
+    int second = INT_MAX;
+    
+    if (sv1 != INT_MAX && v1v2 != INT_MAX && v2N != INT_MAX)
+    {
+        first = sv1 + v1v2 + v2N;
+    }
+
+    if (sv2 != INT_MAX && v2v1 != INT_MAX && v1N != INT_MAX)
+    {
+        second = sv2 + v2v1 + v1N;
+    }
+
+    if (first == INT_MAX && second == INT_MAX)
+    {
+        cout << -1 << endl;
+    }
+    else
+    {
+        cout << min(first,second) << endl;
+    }
+}
