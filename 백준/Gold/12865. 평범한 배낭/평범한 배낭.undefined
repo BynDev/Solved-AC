@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+struct Object
+{
+  int W;
+  int V;
+};
+
+int main() {
+  int N,K; cin>>N>>K;
+  vector<Object>Objects(N+1);
+
+  for(int i = 1; i <= N; i++)
+  {
+    int W,V; cin>>W>>V;
+    Objects[i] = {W,V};
+  }
+  
+  vector<vector<int> >DP(N+1,vector<int>(K+1,0));
+
+  for(int i = 1; i <= N; i++)
+  {
+    for(int j = 1; j <= K; j++)
+    {
+      if (Objects[i].W <= j)
+      {
+        DP[i][j] = max(DP[i-1][j],DP[i-1][j - Objects[i].W] + Objects[i].V);
+      }
+      else {
+        DP[i][j] = DP[i-1][j];
+      }
+    }
+  }
+  cout<<DP[N][K]<<endl;
+}
