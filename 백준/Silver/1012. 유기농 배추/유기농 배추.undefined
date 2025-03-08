@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+using namespace std;
+
+vector<int>dx = {1,-1,0,0};
+vector<int>dy = {0,0,1,-1};
+
+
+int main() {
+
+    int T; cin >> T;
+    for (int i = 0; i < T; i++)
+    {
+        int M,N,K; cin >> M >> N >> K;
+
+        vector<vector<int>>Ground(N, vector<int>(M, 0));
+        
+        for (int j = 0; j < K; j++)
+        {
+            int X,Y; cin >> X >> Y;
+            Ground[Y][X] = 1;
+        }
+        
+        queue<pair<int,int>>q;
+        vector<vector<bool>>visited(N, vector<bool>(M, false));
+        int ans {0};
+
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < M; j++)
+            {
+                if (Ground[i][j] == 1 && visited[i][j] == false)
+                {
+                    ans++;
+                    visited[i][j] = true;
+                    q.push({i,j});
+
+                    while (!q.empty())
+                    {
+                        int y = q.front().first;
+                        int x = q.front().second;
+                        q.pop();
+
+                        for (int d = 0; d < 4; d++)
+                        {
+                            if (x + dx[d] >= 0 && x + dx[d] < M && y + dy[d] >= 0 && y + dy[d] < N)
+                            {
+                                if (visited[y + dy[d]][x + dx[d]] == false && Ground[y + dy[d]][x + dx[d]] == 1)
+                                {
+                                    visited[y + dy[d]][x + dx[d]] = true;
+                                    q.push({y + dy[d], x + dx[d]});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        cout << ans << endl;
+        
+    }
+  
+}
